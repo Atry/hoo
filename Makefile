@@ -23,13 +23,13 @@ test-neko: bin/HooTest.n
 test-node: bin/HooTest.js
 	node bin/HooTest.js
 
-bin/HooTest.n: tests/HooTest.hx $(ALL_SOURCES) | bin
+bin/HooTest.n: $(wildcard tests/*.hx) $(ALL_SOURCES) | bin
 	haxe -neko $@ -main tests.HooTest
 
-bin/HooTest.swf: tests/HooTest.hx $(ALL_SOURCES) | bin
+bin/HooTest.swf: $(wildcard tests/*.hx) $(ALL_SOURCES) | bin
 	haxe -swf $@ -main tests.HooTest
 
-bin/HooTest.js: tests/HooTest.hx $(ALL_SOURCES) | bin
+bin/HooTest.js: $(wildcard tests/*.hx) $(ALL_SOURCES) | bin
 	haxe -js $@ -main tests.HooTest
 
 haxedoc.xml: $(ALL_SOURCES)

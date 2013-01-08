@@ -29,8 +29,9 @@
 
 package tests;
 
-using com.dongxiguo.hoo.NativeEvaluators;
 using com.dongxiguo.hoo.Int64Evaluators;
+using com.dongxiguo.hoo.NativeEvaluators;
+using tests.ArrayConcatenationEvaluator;
 import haxe.Int64;
 
 /**
@@ -48,7 +49,10 @@ import haxe.Int64;
   
   @hoo(true) public static function main():Void
   {
+    trace(Int64.toStr(Int64.ofInt(123456789) * 100000000 + 321));
     foo();
+    var stringArray = ["H", "el", "lo, "] + [ "Wo", "rld!" ];
+    trace(stringArray.join(""));
     setter = 1;
     "sss" + "ss";
     var a = "xx";
