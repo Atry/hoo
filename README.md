@@ -1,4 +1,4 @@
-hoo
+Hoo
 =================
 
 **Hoo** is a library that enables [operator overloading](https://en.wikipedia.org/wiki/Operator_overloading)
