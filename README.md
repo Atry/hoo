@@ -114,7 +114,7 @@ To enable them, just `using com.dongxiguo.hoo.Int64Evaluators;` and/or
       }
     }
 
-Note that you must `using com.dongxiguo.hoo.Int64Evaluators;` before `using com.dongxiguo.hoo.NativeEvaluators;`,
+Note that you must put `using com.dongxiguo.hoo.Int64Evaluators;` before `using com.dongxiguo.hoo.NativeEvaluators;`,
 if you want overload `==` for `haxe.Int64`.
 
 ## License
