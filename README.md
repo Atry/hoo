@@ -72,7 +72,7 @@ Create `ArrayConcatenationEvaluator.hx` with following content:
       }
     }
 
-### Step 3: Use ArrayConcatenationEvaluator you just created.
+### Step 3: Use ArrayConcatenationEvaluator you just created
 
 Add `using ArrayConcatenationEvaluator;` to your `Sample.hx`:
 
@@ -113,6 +113,9 @@ To enable them, just `using com.dongxiguo.hoo.Int64Evaluators;` and/or
         trace(Int64.toStr(i64 * 100000000 + 54321));
       }
     }
+
+Note that you must `using com.dongxiguo.hoo.Int64Evaluators;` before `using com.dongxiguo.hoo.NativeEvaluators;`,
+if you want overload `==` for `haxe.Int64`.
 
 ## License
 
