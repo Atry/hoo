@@ -54,7 +54,7 @@ To enable operator overloading, you must add `@:build(com.dongxiguo.hoo.Operator
 for those classes that use overloaded operators, and add `@hoo` for those methods that use overloaded operators.
 
 Now, the operator `+` is replaced to a function call to `evaluate`.
-If you compile `Sample.hx`, The Haxe compiler will complain that it cannot find field evaluate.
+If you compile `Sample.hx`, the Haxe compiler will complain that it cannot find field `evaluate`.
 
 ### Step 2: Implement your overloading function
 
