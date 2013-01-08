@@ -1,0 +1,6 @@
+-cp .
+-swf bin/HooTest.swf
+-swf-header 300:200:1:DDFAC0
+--flash-strict
+-swf-version 11
+-main tests.HooTest

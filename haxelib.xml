@@ -1,0 +1,19 @@
+<project name="hoo" url="https://github.com/Atry/hoo" license="BSD">
+    <user name="Atry"/>
+    <tag v="operation-overload"/>
+    <tag v="utility"/>
+    <tag v="cross"/>
+    <tag v="js"/>
+    <tag v="javascript"/>
+    <tag v="nme"/>
+    <tag v="cpp"/>
+    <tag v="flash"/>
+    <tag v="neko"/>
+    <tag v="php"/>
+    <tag v="operation"/>
+    <tag v="overload"/>
+    <description>Haxe Operator Overloading</description>
+    <version name="0.1.0">
+      Intial release.
+    </version>
+</project>
