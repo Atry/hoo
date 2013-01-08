@@ -105,7 +105,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
 #if macro
 @:final private class Helper
 {
-  public static function operatorTagNameToEnumName(operatorTagName:String):String
+  @:noUsing public static function operatorTagNameToEnumName(operatorTagName:String):String
   {
     if (operatorTagName.substring(operatorTagName.length - 3) != "Tag")
     {
