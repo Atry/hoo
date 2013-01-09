@@ -103,7 +103,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
 }
 
 #if macro
-@:final private class Helper
+@:final private class NativeEvaluators
 {
   @:noUsing public static function operatorTagNameToEnumName(operatorTagName:String):String
   {
@@ -301,7 +301,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Float, Float>>,
     left:ExprOf<Float>, right:ExprOf<Float>):Expr
   {
-    return Helper.evaluateBinaryOperator(selector, left, right);
+    return NativeEvaluators.evaluateBinaryOperator(selector, left, right);
   }
 }
 
@@ -311,7 +311,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
     selector:ExprOf<PrefixOperatorSelector<OperatorTag, Float>>,
     operant:ExprOf<Float>):Expr
   {
-    return Helper.evaluateUnaryOperator(selector, operant);
+    return NativeEvaluators.evaluateUnaryOperator(selector, operant);
   }
 }
 
@@ -321,7 +321,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
     selector:ExprOf<PostfixOperatorSelector<OperatorTag, Float>>,
     operant:ExprOf<Float>):Expr
   {
-    return Helper.evaluateUnaryOperator(selector, operant);
+    return NativeEvaluators.evaluateUnaryOperator(selector, operant);
   }
 }
 
@@ -331,7 +331,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Bool, Bool>>,
     left:ExprOf<Bool>, right:ExprOf<Bool>):Expr
   {
-    return Helper.evaluateBinaryOperator(selector, left, right);
+    return NativeEvaluators.evaluateBinaryOperator(selector, left, right);
   }
 }
 
@@ -341,7 +341,7 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
     selector:ExprOf<PrefixOperatorSelector<OperatorTag, Bool>>,
     operant:ExprOf<Bool>):Expr
   {
-    return Helper.evaluateUnaryOperator(selector, operant);
+    return NativeEvaluators.evaluateUnaryOperator(selector, operant);
   }
 }
 
@@ -351,6 +351,6 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
     selector:ExprOf<PostfixOperatorSelector<OperatorTag, Bool>>,
     operant:ExprOf<Bool>):Expr
   {
-    return Helper.evaluateUnaryOperator(selector, operant);
+    return NativeEvaluators.evaluateUnaryOperator(selector, operant);
   }
 }

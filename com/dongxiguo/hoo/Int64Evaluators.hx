@@ -62,14 +62,9 @@ import haxe.macro.Expr;
 import haxe.macro.Context;
 #end
 
-@:final class Int64Evaluators
-{
-  @:noUsing @:extern public static inline function toFloat(int64:Int64):Float
-  {
-    return int64.getHigh().toInt() * 4294967296.0 + int64.getLow().toInt();
-  }
-
 #if macro
+@:final private class Int64Evaluators
+{
   @:noUsing public static function evaluateAssignOp<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<AssignOpTag<OperatorTag>, Dynamic, Dynamic>>,
     left:ExprOf<Int64>,
@@ -217,9 +212,8 @@ import haxe.macro.Context;
       }
     }
   }
-#end
-
 }
+#end
 
 @:final extern class NegInt64Evaluator
 {
@@ -237,7 +231,7 @@ import haxe.macro.Context;
     selector:PrefixOperatorSelector<NegBitsTag, Int64>,
     operand:Int64):Int64
   {
-    return Int64.make(Int32.ofInt(~operand.getHigh().toNativeInt()), Int32.ofInt(~operand.getLow().toNativeInt()));
+    return Int64.make(operand.getHigh().complement(), operand.getLow().complement());
   }
 }
 
@@ -716,7 +710,7 @@ import haxe.macro.Context;
                 return macro
                 {
                   $varSelectorExpr;
-                  selector.evaluate(com.dongxiguo.hoo.Int64Evaluators.toFloat($left), $right);
+                  selector.evaluate(com.dongxiguo.hoo.Int64Helper.int64ToFloat($left), $right);
                 }
               }
             }
@@ -933,7 +927,7 @@ import haxe.macro.Context;
                 return macro
                 {
                   $varSelectorExpr;
-                  selector.evaluate($left, com.dongxiguo.hoo.Int64Evaluators.toFloat($right));
+                  selector.evaluate($left, com.dongxiguo.hoo.Int64Helper.int64ToFloat($right));
                 }
               }
             }

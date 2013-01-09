@@ -33,6 +33,7 @@ using com.dongxiguo.hoo.Int64Evaluators;
 using com.dongxiguo.hoo.NativeEvaluators;
 using tests.ArrayConcatenationEvaluator;
 import haxe.Int64;
+import com.dongxiguo.hoo.Int64Helper;
 
 /**
  * @author 杨博
@@ -49,6 +50,10 @@ import haxe.Int64;
   
   @hoo(true) public static function main():Void
   {
+    var float = -4294967296.0;
+    trace(Int64Helper.floatToInt64(float));
+    trace(Int64Helper.int64ToFloat(Int64Helper.floatToInt64(float)));
+    
     trace(Int64.toStr(Int64.ofInt(123456789) * 100000000 + 321));
     foo();
     var stringArray = ["H", "el", "lo, "] + [ "Wo", "rld!" ];
