@@ -33,7 +33,7 @@ bin/HooTest.js: $(wildcard tests/*.hx) $(ALL_SOURCES) | bin
 	haxe -js $@ -main tests.HooTest
 
 haxedoc.xml: $(ALL_SOURCES)
-	haxe -xml $@ $^ --dead-code-elimination
+	haxe -xml $@ $^
 
 bin:
 	mkdir $@
