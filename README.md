@@ -119,9 +119,9 @@ To enable them, just `using com.dongxiguo.hoo.Int64Evaluators;` and/or
       }
     }
 
-If you want overload `==` for `haxe.Int64`,
-you must put `using Int64Evaluators;` before `using NativeEvaluators;` for Haxe 2.10,
-and put `using NativeEvaluators;` before `using Int64Evaluators;` for Haxe 2.11.
+If you want overload `==` for `haxe.Int64`, you must:
+ * Put `using Int64Evaluators;` before `using NativeEvaluators;` for Haxe 2.10, or
+ * put `using NativeEvaluators;` before `using Int64Evaluators;` for Haxe 2.11.
 
 ## License
 
