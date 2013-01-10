@@ -1,7 +1,7 @@
 Hoo
 =================
 
-**Hoo** is a library that enables [operator overloading](https://en.wikipedia.org/wiki/Operator_overloading)
+**Hoo**(**H**axe **O**perator **O**verloading) is a library that enables [operator overloading](https://en.wikipedia.org/wiki/Operator_overloading)
 for [Haxe](http://www.haxe.org/).
 
 Hoo also has build-in overloaded operators for `haxe.Int64`, which allows you coding like this:
