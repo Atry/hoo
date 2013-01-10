@@ -9,7 +9,7 @@ Hoo also has build-in overloaded operators for `haxe.Int64`, which allows you co
     var i64 = Int64.ofInt(123456789);
     
     // Output: 12345678900000123
-    trace(Int64.toStr(i64 * 100000000 + 123));
+    trace(i64 * 100000000 + 123);
 
 ## Installation
 
@@ -115,7 +115,7 @@ To enable them, just `using com.dongxiguo.hoo.Int64Evaluators;` and/or
         var i64 = Int64.ofInt(123456789);
         
         // Output: 12345678900000123
-        trace(Int64.toStr(i64 * 100000000 + 123));
+        trace(i64 * 100000000 + 123);
       }
     }
 
