@@ -29,8 +29,14 @@
 
 package tests;
 
+#if haxe_211
+using com.dongxiguo.hoo.NativeEvaluators;
+using com.dongxiguo.hoo.Int64Evaluators;
+#else
 using com.dongxiguo.hoo.Int64Evaluators;
 using com.dongxiguo.hoo.NativeEvaluators;
+#end
+
 using tests.ArrayConcatenationEvaluator;
 import haxe.Int64;
 import com.dongxiguo.hoo.Int64Helper;
@@ -100,12 +106,5 @@ import com.dongxiguo.hoo.Int64Helper;
     i64 += 3 + i64 + 3;
     trace(Int64.toStr(i64) + "xxx" + "yyy");
     trace(a += i2 += i64);
-    //computeSingleQuantity(i64);
-    //true ? "" : 0;
   }
-  //@hoo public static function computeSingleQuantity(totalQuantity:Int64):Int64
-  //{
-    //return Int64.ofInt(1);
-  //
-  //}
 }

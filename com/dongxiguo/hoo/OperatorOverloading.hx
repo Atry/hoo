@@ -53,19 +53,49 @@ class OperatorOverloading
     return operatorEnumName.substring(2) + "Tag";
   }
   
-  private static function replaceOperators(dontOverloadAssignOperator:Bool, expr:Expr):Expr
+  private static function reflectiveReplace(dontOverloadAssignOperator:Bool, searchIn:Dynamic):Void
+  {
+    if (Reflect.hasField(searchIn, "expr") &&
+        Type.getEnum(searchIn.expr) == ExprDef &&
+        Reflect.hasField(searchIn, "pos") &&
+        Type.getEnum(searchIn.pos) == Position)
+    {
+      replaceOperators(dontOverloadAssignOperator, cast searchIn);
+    }
+    else if (Std.is(searchIn, Array))
+    {
+      for (v in cast(searchIn, Array<Dynamic>))
+      {
+        reflectiveReplace(dontOverloadAssignOperator, v);
+      }
+    }
+    else if (Type.getEnum(searchIn) != null)
+    {
+      for (v in Type.enumParameters(searchIn))
+      {
+        reflectiveReplace(dontOverloadAssignOperator, v);
+      }
+    }
+    else
+    {
+      for (p in Reflect.fields(searchIn))
+      {
+        reflectiveReplace(dontOverloadAssignOperator, Reflect.field(searchIn, p));
+      }
+    }
+  }
+
+  private static function replaceOperators(dontOverloadAssignOperator:Bool, expr:Expr):Void
   {
     switch (expr.expr)
     {
       case EBinop(op, e1, e2):
       {
+        replaceOperators(dontOverloadAssignOperator, e1);
+        replaceOperators(dontOverloadAssignOperator, e2);
         if (op == OpAssign && dontOverloadAssignOperator)
         {
-          return
-          {
-            pos: expr.pos,
-            expr: EBinop(op, replaceOperators(dontOverloadAssignOperator, e1), replaceOperators(dontOverloadAssignOperator, e2))
-          };
+          return;
         }
         var tagExpr = switch(op)
         {
@@ -109,24 +139,36 @@ class OperatorOverloading
             }))
           }
         }
-        var leftExpr = replaceOperators(dontOverloadAssignOperator, e1);
-        var rightExpr = replaceOperators(dontOverloadAssignOperator, e2);
-        return macro 
+        var evaluateExpr =
         {
-          var leftTypeHint = true ? null : $leftExpr;
-          var rightTypeHint = true ? null : $rightExpr;
-          (true ? null : cast(null, com.dongxiguo.hoo.selector.TypeInferenceHelper).makeBinaryOperatorSelector($tagExpr, leftTypeHint, rightTypeHint)).evaluate($leftExpr, $rightExpr);
+          pos: expr.pos,
+          expr: ECall(
+          {
+            pos: expr.pos,
+            expr: EField(macro selector, "evaluate")
+          },
+          [
+            e1,
+            e2
+          ])
         }
+        var replaced = macro 
+        {
+          var selector:haxe.macro.MacroType<[
+            haxe.macro.Context.typeof(
+            {
+              binaryOperator: $tagExpr,
+              left: $e1,
+              right: $e2
+            })] > = null;
+          $evaluateExpr;
+          //selector.evaluate($e1, $e2);
+        }
+        expr.expr = replaced.expr;
       }
       case EUnop(op, isPostfix, e):
       {
-        var makeSelectorExpr =
-        {
-          pos: Context.currentPos(),
-          expr: EField(
-            macro cast(null, com.dongxiguo.hoo.selector.TypeInferenceHelper),
-            isPostfix ? "makePostfixOperatorSelector" : "makePrefixOperatorSelector")
-        }
+        replaceOperators(dontOverloadAssignOperator, e);
         var tagExpr =
         {
           pos: Context.currentPos(),
@@ -139,265 +181,286 @@ class OperatorOverloading
               params: []
             }))
         }
-        var operandExpr = replaceOperators(dontOverloadAssignOperator, e);
-        return macro
+        var selectorExpr =
         {
-          var operandTypeHint = true ? null : $operandExpr;
-          (true ? null : $makeSelectorExpr($tagExpr, operandTypeHint)).evaluate($operandExpr);
+          pos: Context.currentPos(),
+          expr: EObjectDecl(
+          [
+            {
+              field: isPostfix ? "postfixOperator" : "prefixOperator",
+              expr: tagExpr
+            },
+            {
+              field: "operand",
+              expr: e
+            }
+          ])
+        };
+        var replaced = macro
+        {
+          var selector:haxe.macro.MacroType<[haxe.macro.Context.typeof($selectorExpr)]> = null;
+          selector.evaluate($e);
         }
+        expr.expr = replaced.expr;
       }
-      case EConst(c):
+      default:
       {
-        return expr;
+        reflectiveReplace(dontOverloadAssignOperator, expr.expr);
       }
-      case EArray(e1, e2):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EArray(replaceOperators(dontOverloadAssignOperator, e1), replaceOperators(dontOverloadAssignOperator, e2))
-        };
-      }
-      case EField(e, field):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EField(replaceOperators(dontOverloadAssignOperator, e), field)
-        };
-      }
-      case EParenthesis(e):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EParenthesis(replaceOperators(dontOverloadAssignOperator, e))
-        };
-      }
-      case EObjectDecl(fields):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EObjectDecl(Lambda.array(Lambda.map(fields, function(element)
-          {
-            return
-            {
-              field: element.field,
-              expr: replaceOperators(dontOverloadAssignOperator, element.expr)
-            };
-          })))
-        };
-      }
-      case EArrayDecl(values):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EArrayDecl(Lambda.array(Lambda.map(values, callback(replaceOperators, dontOverloadAssignOperator))))
-        };
-      }
-      case ECall(e, params):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ECall(
-            replaceOperators(dontOverloadAssignOperator, e),
-            Lambda.array(Lambda.map(params, callback(replaceOperators, dontOverloadAssignOperator))))
-        };
-      }
-      case ENew(t, params):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ENew(t, Lambda.array(Lambda.map(params, callback(replaceOperators, dontOverloadAssignOperator))))
-        };
-      }
-      case EVars(vars):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EVars(Lambda.array(Lambda.map(vars, function(element)
-          {
-            return
-            {
-              name: element.name,
-              type: element.type,
-              expr: element.expr == null ? null : replaceOperators(dontOverloadAssignOperator, element.expr)
-            };
-          })))
-        };
-      }
-      case EFunction(name, f):
-      {
-        return expr;
-      }
-      case EBlock(exprs):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EBlock(Lambda.array(Lambda.map(exprs, callback(replaceOperators, dontOverloadAssignOperator))))
-        };
-      }
-      case EFor(it, expr):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EFor(replaceOperators(dontOverloadAssignOperator, it), replaceOperators(dontOverloadAssignOperator, expr))
-        };
-      }
-      case EIn(e1, e2):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EIn(replaceOperators(dontOverloadAssignOperator, e1), replaceOperators(dontOverloadAssignOperator, e2))
-        };
-      }
-      case EIf(econd, eif, eelse):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EIf(
-            replaceOperators(dontOverloadAssignOperator, econd),
-            replaceOperators(dontOverloadAssignOperator, eif),
-            eelse == null ? null : replaceOperators(dontOverloadAssignOperator, eelse))
-        };
-      }
-      case EWhile(econd, e, normalWhile):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EWhile(replaceOperators(dontOverloadAssignOperator, econd), replaceOperators(dontOverloadAssignOperator, e), normalWhile)
-        };
-      }
-      case ESwitch(e, cases, edef):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ESwitch(
-            replaceOperators(dontOverloadAssignOperator, e),
-            Lambda.array(Lambda.map(cases, function(element)
-            {
-              return
-              {
-                values: Lambda.array(Lambda.map(element.values, callback(replaceOperators, dontOverloadAssignOperator))),
-                expr: replaceOperators(dontOverloadAssignOperator, element.expr)
-              };
-            })),
-            edef == null ? null : replaceOperators(dontOverloadAssignOperator, edef))
-        };
-      }
-      case ETry(e, catches):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ETry(
-            replaceOperators(dontOverloadAssignOperator, e),
-            Lambda.array(Lambda.map(catches, function(element)
-            {
-              return
-              {
-                name: element.name,
-                type: element.type,
-                expr: replaceOperators(dontOverloadAssignOperator, element.expr)
-              };
-            })))
-        };
-      }
-      case EReturn(e):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EReturn(e == null ? null : replaceOperators(dontOverloadAssignOperator, e))
-        };
-      }
-      case EBreak, EContinue:
-      {
-        return expr;
-      }
-      case EUntyped(e):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EUntyped(replaceOperators(dontOverloadAssignOperator, e))
-        };
-      }
-      case EThrow(e):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EThrow(replaceOperators(dontOverloadAssignOperator, e))
-        };
-      }
-      case ECast(e, t):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ECast(replaceOperators(dontOverloadAssignOperator, e), t)
-        };
-      }
-      case EDisplay(e, isCall):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EDisplay(replaceOperators(dontOverloadAssignOperator, e), isCall)
-        };
-      }
-      case EDisplayNew(t):
-      {
-        return expr;
-      }
-      case ETernary(econd, eif, eelse):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ETernary(
-            replaceOperators(dontOverloadAssignOperator, econd),
-            replaceOperators(dontOverloadAssignOperator, eif),
-            replaceOperators(dontOverloadAssignOperator, eelse))
-        };
-      }
-      case ECheckType(e, t):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: ECheckType(replaceOperators(dontOverloadAssignOperator, e), t)
-        };
-      }
-    	#if !haxe3
-      case EType(e, field):
-      {
-        return
-        {
-          pos: expr.pos,
-          expr: EType(replaceOperators(dontOverloadAssignOperator, e), field)
-        };
-      }
-      #end
+
+      //case EConst(c):
+      //{
+        //return expr;
+      //}
+      //case EArray(e1, e2):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EArray(replaceOperators(dontOverloadAssignOperator, e1), replaceOperators(dontOverloadAssignOperator, e2))
+        //};
+      //}
+      //case EField(e, field):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EField(replaceOperators(dontOverloadAssignOperator, e), field)
+        //};
+      //}
+      //case EParenthesis(e):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EParenthesis(replaceOperators(dontOverloadAssignOperator, e))
+        //};
+      //}
+      //case EObjectDecl(fields):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EObjectDecl(Lambda.array(Lambda.map(fields, function(element)
+          //{
+            //return
+            //{
+              //field: element.field,
+              //expr: replaceOperators(dontOverloadAssignOperator, element.expr)
+            //};
+          //})))
+        //};
+      //}
+      //case EArrayDecl(values):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EArrayDecl(Lambda.array(Lambda.map(values, callback(replaceOperators, dontOverloadAssignOperator))))
+        //};
+      //}
+      //case ECall(e, params):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ECall(
+            //replaceOperators(dontOverloadAssignOperator, e),
+            //Lambda.array(Lambda.map(params, callback(replaceOperators, dontOverloadAssignOperator))))
+        //};
+      //}
+      //case ENew(t, params):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ENew(t, Lambda.array(Lambda.map(params, callback(replaceOperators, dontOverloadAssignOperator))))
+        //};
+      //}
+      //case EVars(vars):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EVars(Lambda.array(Lambda.map(vars, function(element)
+          //{
+            //return
+            //{
+              //name: element.name,
+              //type: element.type,
+              //expr: element.expr == null ? null : replaceOperators(dontOverloadAssignOperator, element.expr)
+            //};
+          //})))
+        //};
+      //}
+      //case EFunction(name, f):
+      //{
+        //return expr;
+      //}
+      //case EBlock(exprs):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EBlock(Lambda.array(Lambda.map(exprs, callback(replaceOperators, dontOverloadAssignOperator))))
+        //};
+      //}
+      //case EFor(it, expr):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EFor(replaceOperators(dontOverloadAssignOperator, it), replaceOperators(dontOverloadAssignOperator, expr))
+        //};
+      //}
+      //case EIn(e1, e2):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EIn(replaceOperators(dontOverloadAssignOperator, e1), replaceOperators(dontOverloadAssignOperator, e2))
+        //};
+      //}
+      //case EIf(econd, eif, eelse):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EIf(
+            //replaceOperators(dontOverloadAssignOperator, econd),
+            //replaceOperators(dontOverloadAssignOperator, eif),
+            //eelse == null ? null : replaceOperators(dontOverloadAssignOperator, eelse))
+        //};
+      //}
+      //case EWhile(econd, e, normalWhile):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EWhile(replaceOperators(dontOverloadAssignOperator, econd), replaceOperators(dontOverloadAssignOperator, e), normalWhile)
+        //};
+      //}
+      //case ESwitch(e, cases, edef):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ESwitch(
+            //replaceOperators(dontOverloadAssignOperator, e),
+            //Lambda.array(Lambda.map(cases, function(element)
+            //{
+              //return
+              //{
+                //values: Lambda.array(Lambda.map(element.values, callback(replaceOperators, dontOverloadAssignOperator))),
+                //expr: replaceOperators(dontOverloadAssignOperator, element.expr)
+              //};
+            //})),
+            //edef == null ? null : replaceOperators(dontOverloadAssignOperator, edef))
+        //};
+      //}
+      //case ETry(e, catches):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ETry(
+            //replaceOperators(dontOverloadAssignOperator, e),
+            //Lambda.array(Lambda.map(catches, function(element)
+            //{
+              //return
+              //{
+                //name: element.name,
+                //type: element.type,
+                //expr: replaceOperators(dontOverloadAssignOperator, element.expr)
+              //};
+            //})))
+        //};
+      //}
+      //case EReturn(e):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EReturn(e == null ? null : replaceOperators(dontOverloadAssignOperator, e))
+        //};
+      //}
+      //case EBreak, EContinue:
+      //{
+        //return expr;
+      //}
+      //case EUntyped(e):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EUntyped(replaceOperators(dontOverloadAssignOperator, e))
+        //};
+      //}
+      //case EThrow(e):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EThrow(replaceOperators(dontOverloadAssignOperator, e))
+        //};
+      //}
+      //case ECast(e, t):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ECast(replaceOperators(dontOverloadAssignOperator, e), t)
+        //};
+      //}
+      //case EDisplay(e, isCall):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EDisplay(replaceOperators(dontOverloadAssignOperator, e), isCall)
+        //};
+      //}
+      //case EDisplayNew(t):
+      //{
+        //return expr;
+      //}
+      //case ETernary(econd, eif, eelse):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ETernary(
+            //replaceOperators(dontOverloadAssignOperator, econd),
+            //replaceOperators(dontOverloadAssignOperator, eif),
+            //replaceOperators(dontOverloadAssignOperator, eelse))
+        //};
+      //}
+      //case ECheckType(e, t):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: ECheckType(replaceOperators(dontOverloadAssignOperator, e), t)
+        //};
+      //}
+    	//#if !haxe3
+      //case EType(e, field):
+      //{
+        //return
+        //{
+          //pos: expr.pos,
+          //expr: EType(replaceOperators(dontOverloadAssignOperator, e), field)
+        //};
+      //}
+      //#end
     }
   }
   #end
 
   @:noUsing @:macro public static function enable(expr:Expr, ?dontOverloadAssignOperator:Bool = false):Expr
   {
-    return replaceOperators(dontOverloadAssignOperator, expr);
+    replaceOperators(dontOverloadAssignOperator, expr);
+    return expr;
   }
   
   @:noUsing @:macro public static function enableByMeta(metaName:String, ?dontOverloadAssignOperator:Bool = false):Array<Field>

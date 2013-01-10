@@ -13,7 +13,7 @@
     <tag v="operation"/>
     <tag v="overload"/>
     <description>Haxe Operator Overloading</description>
-    <version name="0.1.0">
-      Intial release.
+    <version name="0.1.1">
+      Port to Haxe 2.11
     </version>
 </project>

@@ -65,8 +65,429 @@ import haxe.macro.Context;
 #if macro
 @:final private class Int64Evaluators
 {
+  @:noUsing public static function evaluateIntWithInt64<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int, Int64>>,
+    left:ExprOf<Int>,
+    right:ExprOf<Int64>):Expr
+  {
+    var selectorType = Context.typeof(selector);
+    switch (Context.follow(selectorType))
+    {
+      case TAnonymous(a):
+      {
+        var binopTagType;
+        for (field in a.get().fields)
+        {
+          switch (field.name)
+          {
+            case "binaryOperator":
+            {
+              binopTagType = field.type;
+            }
+            case "left", "right":
+            default:
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+          }
+        }
+        switch (binopTagType)
+        {
+          case TInst(t, innerParams):
+          {
+            var classType = t.get();
+            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+            switch (classType.name)
+            {
+              case "AssignOpTag":
+              {
+                throw Context.error(classType.name + " must not apply on Int and Int64!", Context.currentPos());
+              }
+              default:
+              {
+                if (innerParams.length != 0)
+                {
+                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
+                }
+                var varSelectorExpr =
+                {
+                  pos: Context.currentPos(),
+                  expr: EVars(
+                  [
+                    {
+                      name: "selector",
+                      type: TPath(
+                      {
+                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
+                        name: "BinaryOperatorSelector",
+                        params:
+                        [
+                          TPType(TPath(
+                          {
+                            pack: classType.pack,
+                            name: classType.name,
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [ "haxe" ],
+                            name: "Int64",
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [ "haxe" ],
+                            name: "Int64",
+                            params: []
+                          }))
+                        ]
+                      }),
+                      expr: macro null
+                    }
+                  ])
+                }
+                return macro
+                {
+                  $varSelectorExpr;
+                  selector.evaluate(haxe.Int64.ofInt($left), $right);
+                }
+              }
+            }
+          }
+          default:
+          {
+            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+          }
+        }
+      }
+      default:
+      {
+        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+      }
+    }
+  }
+
+  @:noUsing public static function evaluateInt64WithInt<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Int>>,
+    left:ExprOf<Int64>,
+    right:ExprOf<Int>):Expr
+  {
+    var selectorType = Context.typeof(selector);
+    switch (Context.follow(selectorType))
+    {
+      case TAnonymous(a):
+      {
+        var binopTagType;
+        for (field in a.get().fields)
+        {
+          switch (field.name)
+          {
+            case "binaryOperator":
+            {
+              binopTagType = field.type;
+            }
+            case "left", "right":
+            default:
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+          }
+        }
+        switch (binopTagType)
+        {
+          case TInst(t, innerParams):
+          {
+            var classType = t.get();
+            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+            switch (classType.name)
+            {
+              case "AssignOpTag":
+              {
+                throw Context.error(classType.name + "'s typeParameter must not " + classType.name + "!", Context.currentPos());
+              }
+              default:
+              {
+                if (innerParams.length != 0)
+                {
+                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
+                }
+                var varSelectorExpr =
+                {
+                  pos: Context.currentPos(),
+                  expr: EVars(
+                  [
+                    {
+                      name: "selector",
+                      type: TPath(
+                      {
+                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
+                        name: "BinaryOperatorSelector",
+                        params:
+                        [
+                          TPType(TPath(
+                          {
+                            pack: classType.pack,
+                            name: classType.name,
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [ "haxe" ],
+                            name: "Int64",
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [ "haxe" ],
+                            name: "Int64",
+                            params: []
+                          }))
+                        ]
+                      }),
+                      expr: macro null
+                    }
+                  ])
+                }
+                return macro
+                {
+                  $varSelectorExpr;
+                  selector.evaluate($left, haxe.Int64.ofInt($right));
+                }
+              }
+            }
+          }
+          default:
+          {
+            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+          }
+        }
+      }
+      default:
+      {
+        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+      }
+    }
+  }
+
+  @:noUsing public static function evaluateFloatWithInt64<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Float, Int64>>,
+    left:ExprOf<Float>,
+    right:ExprOf<Int64>):Expr
+  {
+    var selectorType = Context.typeof(selector);
+    switch (Context.follow(selectorType))
+    {
+      case TAnonymous(a):
+      {
+        var binopTagType;
+        for (field in a.get().fields)
+        {
+          switch (field.name)
+          {
+            case "binaryOperator":
+            {
+              binopTagType = field.type;
+            }
+            case "left", "right":
+            default:
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+          }
+        }
+        switch (binopTagType)
+        {
+          case TInst(t, innerParams):
+          {
+            var classType = t.get();
+            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+            switch (classType.name)
+            {
+              case "AssignOpTag":
+              {
+                // TODO:
+                throw Context.error(classType.name + " must not apply on Float and Int64!", Context.currentPos());
+              }
+              default:
+              {
+                if (innerParams.length != 0)
+                {
+                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
+                }
+                var varSelectorExpr =
+                {
+                  pos: Context.currentPos(),
+                  expr: EVars(
+                  [
+                    {
+                      name: "selector",
+                      type: TPath(
+                      {
+                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
+                        name: "BinaryOperatorSelector",
+                        params:
+                        [
+                          TPType(TPath(
+                          {
+                            pack: classType.pack,
+                            name: classType.name,
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [],
+                            name: "Float",
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [],
+                            name: "Float",
+                            params: []
+                          }))
+                        ]
+                      }),
+                      expr: macro null
+                    }
+                  ])
+                }
+                return macro
+                {
+                  $varSelectorExpr;
+                  selector.evaluate($left, com.dongxiguo.hoo.Int64Helper.int64ToFloat($right));
+                }
+              }
+            }
+          }
+          default:
+          {
+            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+          }
+        }
+      }
+      default:
+      {
+        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+      }
+    }
+  }
+
+  @:noUsing public static function evaluateInt64WithFloat<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Float>>,
+    left:ExprOf<Int64>,
+    right:ExprOf<Float>):Expr
+  {
+    var selectorType = Context.typeof(selector);
+    switch (Context.follow(selectorType))
+    {
+      case TAnonymous(a):
+      {
+        var binopTagType;
+        for (field in a.get().fields)
+        {
+          switch (field.name)
+          {
+            case "binaryOperator":
+            {
+              binopTagType = field.type;
+            }
+            case "left", "right":
+            default:
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+          }
+        }
+        switch (binopTagType)
+        {
+          case TInst(t, innerParams):
+          {
+            var classType = t.get();
+            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
+            {
+              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+            }
+            switch (classType.name)
+            {
+              case "AssignOpTag":
+              {
+                throw Context.error(classType.name + " must not apply on Int64 and Float!", Context.currentPos());
+              }
+              default:
+              {
+                if (innerParams.length != 0)
+                {
+                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
+                }
+                var varSelectorExpr =
+                {
+                  pos: Context.currentPos(),
+                  expr: EVars(
+                  [
+                    {
+                      name: "selector",
+                      type: TPath(
+                      {
+                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
+                        name: "BinaryOperatorSelector",
+                        params:
+                        [
+                          TPType(TPath(
+                          {
+                            pack: classType.pack,
+                            name: classType.name,
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [],
+                            name: "Float",
+                            params: []
+                          })),
+                          TPType(TPath(
+                          {
+                            pack: [],
+                            name: "Float",
+                            params: []
+                          }))
+                        ]
+                      }),
+                      expr: macro null
+                    }
+                  ])
+                }
+                return macro
+                {
+                  $varSelectorExpr;
+                  selector.evaluate(com.dongxiguo.hoo.Int64Helper.int64ToFloat($left), $right);
+                }
+              }
+            }
+          }
+          default:
+          {
+            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+          }
+        }
+      }
+      default:
+      {
+        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
+      }
+    }
+  }
+  
   @:noUsing public static function evaluateAssignOp<OperatorTag>(
-    selector:ExprOf<BinaryOperatorSelector<AssignOpTag<OperatorTag>, Dynamic, Dynamic>>,
+    selector:ExprOf<BinaryOperatorSelector<AssignOpTag<OperatorTag>, ExprOf<Int64>, Dynamic>>,
     left:ExprOf<Int64>,
     right:Expr):ExprOf<Int64>
   {
@@ -156,6 +577,21 @@ import haxe.macro.Context;
                                 TPType(TPath(
                                   switch (Context.follow(rightType))
                                   {
+                                    #if haxe_211
+                                    case TAbstract(t, params):
+                                    {
+                                      if (params.length != 0)
+                                      {
+                                        Context.error("Right operand must be Int or Int64", Context.currentPos());
+                                      }
+                                      var intType = t.get();
+                                      {
+                                        pack: intType.pack,
+                                        name: intType.name,
+                                        params: []
+                                      }
+                                    }
+                                    #end
                                     case TInst(t, params):
                                     {
                                       if (params.length != 0)
@@ -163,9 +599,8 @@ import haxe.macro.Context;
                                         Context.error("Right operand must be Int or Int64", Context.currentPos());
                                       }
                                       var intType = t.get();
-                                      
                                       {
-                                        pack: intType.pack,//[ "com", "dongxiguo", "hoo", "selector", "binopTag" ],
+                                        pack: intType.pack,
                                         name: intType.name,
                                         params: []
                                       }
@@ -213,6 +648,54 @@ import haxe.macro.Context;
     }
   }
 }
+#end
+
+#if haxe_211
+
+@:final @:macro class FloatInt64Evalutor
+{
+  public static function evaluate<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Float, Int64>>,
+    left:ExprOf<Float>,
+    right:ExprOf<Int64>):Expr
+  {
+    return Int64Evaluators.evaluateFloatWithInt64(selector, left, right);
+  }
+}
+
+@:final @:macro class Int64FloatEvalutor
+{
+  public static function evaluate<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Float>>,
+    left:ExprOf<Int64>,
+    right:ExprOf<Float>):Expr
+  {
+    return Int64Evaluators.evaluateInt64WithFloat(selector, left, right);
+  }
+}
+
+@:final @:macro class Int64IntEvalutor
+{
+  public static function evaluate<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Int>>,
+    left:ExprOf<Int64>,
+    right:ExprOf<Int>):Expr
+  {
+    return Int64Evaluators.evaluateInt64WithInt(selector, left, right);
+  }
+}
+
+@:final @:macro class IntInt64Evalutor
+{
+  public static function evaluate<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int, Int64>>,
+    left:ExprOf<Int>,
+    right:ExprOf<Int64>):Expr
+  {
+    return Int64Evaluators.evaluateIntWithInt64(selector, left, right);
+  }
+}
+
 #end
 
 @:final extern class NegInt64Evaluator
@@ -513,6 +996,8 @@ import haxe.macro.Context;
   }
 }
 
+#if !haxe_211
+
 @:final @:macro class Int64IntEvalutor
 {
   public static function evaluate<OperatorTag>(
@@ -520,212 +1005,7 @@ import haxe.macro.Context;
     left:ExprOf<Int64>,
     right:ExprOf<Int>):Expr
   {
-    var selectorType = Context.typeof(selector);
-    switch (Context.follow(selectorType))
-    {
-      case TAnonymous(a):
-      {
-        var binopTagType;
-        for (field in a.get().fields)
-        {
-          switch (field.name)
-          {
-            case "binaryOperator":
-            {
-              binopTagType = field.type;
-            }
-            case "left", "right":
-            default:
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-          }
-        }
-        switch (binopTagType)
-        {
-          case TInst(t, innerParams):
-          {
-            var classType = t.get();
-            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-            switch (classType.name)
-            {
-              case "AssignOpTag":
-              {
-                throw Context.error(classType.name + "'s typeParameter must not " + classType.name + "!", Context.currentPos());
-              }
-              default:
-              {
-                if (innerParams.length != 0)
-                {
-                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
-                }
-                var varSelectorExpr =
-                {
-                  pos: Context.currentPos(),
-                  expr: EVars(
-                  [
-                    {
-                      name: "selector",
-                      type: TPath(
-                      {
-                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
-                        name: "BinaryOperatorSelector",
-                        params:
-                        [
-                          TPType(TPath(
-                          {
-                            pack: classType.pack,
-                            name: classType.name,
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [ "haxe" ],
-                            name: "Int64",
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [ "haxe" ],
-                            name: "Int64",
-                            params: []
-                          }))
-                        ]
-                      }),
-                      expr: macro null
-                    }
-                  ])
-                }
-                return macro
-                {
-                  $varSelectorExpr;
-                  selector.evaluate($left, haxe.Int64.ofInt($right));
-                }
-              }
-            }
-          }
-          default:
-          {
-            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-          }
-        }
-      }
-      default:
-      {
-        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-      }
-    }
-  }
-}
-
-@:final @:macro class Int64FloatEvalutor
-{
-  public static function evaluate<OperatorTag>(
-    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Float>>,
-    left:ExprOf<Int64>,
-    right:ExprOf<Float>):Expr
-  {
-    var selectorType = Context.typeof(selector);
-    switch (Context.follow(selectorType))
-    {
-      case TAnonymous(a):
-      {
-        var binopTagType;
-        for (field in a.get().fields)
-        {
-          switch (field.name)
-          {
-            case "binaryOperator":
-            {
-              binopTagType = field.type;
-            }
-            case "left", "right":
-            default:
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-          }
-        }
-        switch (binopTagType)
-        {
-          case TInst(t, innerParams):
-          {
-            var classType = t.get();
-            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-            switch (classType.name)
-            {
-              case "AssignOpTag":
-              {
-                throw Context.error(classType.name + "must not apply on Int64 and Float!", Context.currentPos());
-              }
-              default:
-              {
-                if (innerParams.length != 0)
-                {
-                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
-                }
-                var varSelectorExpr =
-                {
-                  pos: Context.currentPos(),
-                  expr: EVars(
-                  [
-                    {
-                      name: "selector",
-                      type: TPath(
-                      {
-                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
-                        name: "BinaryOperatorSelector",
-                        params:
-                        [
-                          TPType(TPath(
-                          {
-                            pack: classType.pack,
-                            name: classType.name,
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [],
-                            name: "Float",
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [],
-                            name: "Float",
-                            params: []
-                          }))
-                        ]
-                      }),
-                      expr: macro null
-                    }
-                  ])
-                }
-                return macro
-                {
-                  $varSelectorExpr;
-                  selector.evaluate(com.dongxiguo.hoo.Int64Helper.int64ToFloat($left), $right);
-                }
-              }
-            }
-          }
-          default:
-          {
-            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-          }
-        }
-      }
-      default:
-      {
-        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-      }
-    }
+    return Int64Evaluators.evaluateInt64WithInt(selector, left, right);
   }
 }
 
@@ -736,104 +1016,7 @@ import haxe.macro.Context;
     left:ExprOf<Int>,
     right:ExprOf<Int64>):Expr
   {
-    var selectorType = Context.typeof(selector);
-    switch (Context.follow(selectorType))
-    {
-      case TAnonymous(a):
-      {
-        var binopTagType;
-        for (field in a.get().fields)
-        {
-          switch (field.name)
-          {
-            case "binaryOperator":
-            {
-              binopTagType = field.type;
-            }
-            case "left", "right":
-            default:
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-          }
-        }
-        switch (binopTagType)
-        {
-          case TInst(t, innerParams):
-          {
-            var classType = t.get();
-            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-            switch (classType.name)
-            {
-              case "AssignOpTag":
-              {
-                throw Context.error(classType.name + " must not apply on Int and Int64!", Context.currentPos());
-              }
-              default:
-              {
-                if (innerParams.length != 0)
-                {
-                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
-                }
-                var varSelectorExpr =
-                {
-                  pos: Context.currentPos(),
-                  expr: EVars(
-                  [
-                    {
-                      name: "selector",
-                      type: TPath(
-                      {
-                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
-                        name: "BinaryOperatorSelector",
-                        params:
-                        [
-                          TPType(TPath(
-                          {
-                            pack: classType.pack,
-                            name: classType.name,
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [ "haxe" ],
-                            name: "Int64",
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [ "haxe" ],
-                            name: "Int64",
-                            params: []
-                          }))
-                        ]
-                      }),
-                      expr: macro null
-                    }
-                  ])
-                }
-                return macro
-                {
-                  $varSelectorExpr;
-                  selector.evaluate(haxe.Int64.ofInt($left), $right);
-                }
-              }
-            }
-          }
-          default:
-          {
-            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-          }
-        }
-      }
-      default:
-      {
-        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-      }
-    }
+    return Int64Evaluators.evaluateIntWithInt64(selector, left, right);
   }
 }
 
@@ -844,104 +1027,19 @@ import haxe.macro.Context;
     left:ExprOf<Float>,
     right:ExprOf<Int64>):Expr
   {
-    var selectorType = Context.typeof(selector);
-    switch (Context.follow(selectorType))
-    {
-      case TAnonymous(a):
-      {
-        var binopTagType;
-        for (field in a.get().fields)
-        {
-          switch (field.name)
-          {
-            case "binaryOperator":
-            {
-              binopTagType = field.type;
-            }
-            case "left", "right":
-            default:
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-          }
-        }
-        switch (binopTagType)
-        {
-          case TInst(t, innerParams):
-          {
-            var classType = t.get();
-            if (classType.module != "com.dongxiguo.hoo.selector.binopTag." + classType.name)
-            {
-              throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-            }
-            switch (classType.name)
-            {
-              case "AssignOpTag":
-              {
-                // TODO:
-                throw Context.error(classType.name + " must not apply on Float and Int64!", Context.currentPos());
-              }
-              default:
-              {
-                if (innerParams.length != 0)
-                {
-                  throw Context.error(classType.name + " must not have typeParameters!", Context.currentPos());
-                }
-                var varSelectorExpr =
-                {
-                  pos: Context.currentPos(),
-                  expr: EVars(
-                  [
-                    {
-                      name: "selector",
-                      type: TPath(
-                      {
-                        pack: [ "com", "dongxiguo", "hoo", "selector" ],
-                        name: "BinaryOperatorSelector",
-                        params:
-                        [
-                          TPType(TPath(
-                          {
-                            pack: classType.pack,
-                            name: classType.name,
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [],
-                            name: "Float",
-                            params: []
-                          })),
-                          TPType(TPath(
-                          {
-                            pack: [],
-                            name: "Float",
-                            params: []
-                          }))
-                        ]
-                      }),
-                      expr: macro null
-                    }
-                  ])
-                }
-                return macro
-                {
-                  $varSelectorExpr;
-                  selector.evaluate($left, com.dongxiguo.hoo.Int64Helper.int64ToFloat($right));
-                }
-              }
-            }
-          }
-          default:
-          {
-            throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-          }
-        }
-      }
-      default:
-      {
-        throw Context.error("Illegal selector: " + selectorType, Context.currentPos());
-      }
-    }
+    return Int64Evaluators.evaluateFloatWithInt64(selector, left, right);
   }
 }
+
+@:final @:macro class Int64FloatEvalutor
+{
+  public static function evaluate<OperatorTag>(
+    selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Float>>,
+    left:ExprOf<Int64>,
+    right:ExprOf<Float>):Expr
+  {
+    return Int64Evaluators.evaluateInt64WithFloat(selector, left, right);
+  }
+}
+
+#end
