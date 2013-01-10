@@ -100,8 +100,13 @@ There are build-in overloaded operators for `haxe.Int64` and  native types.
 To enable them, just `using com.dongxiguo.hoo.Int64Evaluators;` and/or
 `using com.dongxiguo.hoo.NativeEvaluators;`:
 
+    #if haxe_211
+    using com.dongxiguo.hoo.NativeEvaluators;
+    using com.dongxiguo.hoo.Int64Evaluators;
+    #else
     using com.dongxiguo.hoo.Int64Evaluators;
     using com.dongxiguo.hoo.NativeEvaluators;
+    #end
     @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta("hoo"))
     class Sample
     {
@@ -114,8 +119,9 @@ To enable them, just `using com.dongxiguo.hoo.Int64Evaluators;` and/or
       }
     }
 
-Note that you must put `using com.dongxiguo.hoo.Int64Evaluators;` before `using com.dongxiguo.hoo.NativeEvaluators;`,
-if you want overload `==` for `haxe.Int64`.
+If you want overload `==` for `haxe.Int64`,
+you must put `using Int64Evaluators;` before `using NativeEvaluators;` for Haxe 2.10,
+and put `using NativeEvaluators;` before `using Int64Evaluators;` for Haxe 2.11.
 
 ## License
 
