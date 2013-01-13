@@ -4,7 +4,7 @@ Hoo
 **Haxe Operator Overloading** (<wbr/>**Hoo**), is a library that enables [operator overloading](https://en.wikipedia.org/wiki/Operator_overloading)
 for [Haxe](http://www.haxe.org/).
 
-Hoo also has build-in overloaded operators for `haxe.Int64`, which allows you coding like this:
+Hoo also has build-in overloaded operators for `haxe.Int64`, which allows you coding:
 
     var i64 = Int64.ofInt(123456789);
     
@@ -14,7 +14,7 @@ Hoo also has build-in overloaded operators for `haxe.Int64`, which allows you co
 ## Installation
 
 I have upload Hoo to [haxelib](http://lib.haxe.org/p/hoo). To install it, type the following
-command in shell:
+command in the shell:
 
     haxelib install hoo
 
