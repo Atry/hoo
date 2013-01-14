@@ -474,7 +474,7 @@ class OperatorOverloading
         {
           for (m in field.meta)
           {
-            if (metaName == null || m.name == metaName)
+            if (m.name == metaName)
             {
               var dontOverloadAssignOperatorExpr =
                 if (m.params.length == 1)
