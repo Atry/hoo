@@ -520,4 +520,43 @@ class OperatorOverloading
     }
     return bf;
   }
+  
+  @:noUsing @:macro public static function enableAll(?dontOverloadAssignOperator:Bool = false):Array<Field>
+  {
+    var bf = Context.getBuildFields();
+    for (field in bf)
+    {
+      switch (field.kind)
+      {
+        case FFun(f):
+        {
+              var dontOverloadAssignOperatorExpr = Context.makeExpr(dontOverloadAssignOperator, f.expr.pos);
+              var originExpr = f.expr;
+              // 这样的表达式：enable(if (xxx)"s"else 0)无法通过编译，所以必须增加一个空代码块
+              var emptyBlock =
+              {
+                expr: EBlock([]),
+                pos: Context.currentPos()
+              }
+              switch (originExpr.expr)
+              {
+                case EBlock(exprs):
+                {
+                  exprs.push(emptyBlock);
+                  f.expr = macro com.dongxiguo.hoo.OperatorOverloading.enable($originExpr, $dontOverloadAssignOperatorExpr);
+                }
+                default:
+                {
+                  f.expr = macro com.dongxiguo.hoo.OperatorOverloading.enable( { $originExpr; $emptyBlock; }, $dontOverloadAssignOperatorExpr);
+                }
+              }
+        }
+        default:
+        {
+          continue;
+        }
+      }
+    }
+    return bf;
+  }
 }
