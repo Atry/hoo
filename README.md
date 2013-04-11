@@ -100,7 +100,7 @@ There are built-in overloaded operators for `haxe.Int64` and native types.
 To enable them, type `using com.dongxiguo.hoo.Int64Evaluators;` and/or
 `using com.dongxiguo.hoo.NativeEvaluators;`:
 
-    #if haxe_211
+    #if (haxe_211 || haxe3)
     using com.dongxiguo.hoo.NativeEvaluators;
     using com.dongxiguo.hoo.Int64Evaluators;
     #else
