@@ -72,7 +72,7 @@ Create `ArrayConcatenationEvaluator.hx` with the following content:
       }
     }
 
-### Step 3: Use ArrayConcatenationEvaluator
+### Step 3: Use `ArrayConcatenationEvaluator`
 
 Add `using ArrayConcatenationEvaluator;` to your `Sample.hx`:
 
