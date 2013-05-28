@@ -1,19 +1,29 @@
-all: release.zip
-
 ALL_SOURCES=$(wildcard \
 com/dongxiguo/hoo/*.hx \
 com/dongxiguo/hoo/*/*.hx \
 com/dongxiguo/hoo/*/*/*.hx)
 
-release.zip: \
+all release.zip: \
 haxelib.xml \
 haxedoc.xml \
+run.n \
 LICENSE \
 $(ALL_SOURCES)
+
+ifeq ($(OS),Windows_NT)
+cygpath=$(shell cygpath $(foreach f,$(1),"$(f)"))
+else
+cygpath=$(1)
+endif
+
+run.n: $(wildcard $(call cygpath,$(shell haxelib run haxelib-run print-lib-path)com/dongxiguo/utils/*.hx))
+	haxe -main com.dongxiguo.utils.HaxelibRun -lib haxelib-run -neko $@
+
+release.zip:
 	 zip --filesync $@ $^
 
 clean:
-	$(RM) -r bin release.zip haxedoc.xml
+	$(RM) -r bin release.zip run.n haxedoc.xml
 
 test: test-neko test-node bin/HooTest.swf
 
@@ -38,4 +48,7 @@ haxedoc.xml: $(ALL_SOURCES)
 bin:
 	mkdir $@
 
-.PHONY: all clean test-neko test-node test
+install: release.zip
+	haxelib test release.zip
+
+.PHONY: all clean test-neko test-node test install

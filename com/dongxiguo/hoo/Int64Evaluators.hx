@@ -152,7 +152,8 @@ import haxe.macro.Context;
                 return macro
                 {
                   $varSelectorExpr;
-                  selector.evaluate(haxe.Int64.ofInt($left), $right);
+                  var __left:Null<Int> = $left;
+                  selector.evaluate(__left == null ? null : haxe.Int64.ofInt(__left), $right);
                 }
               }
             }
@@ -257,7 +258,8 @@ import haxe.macro.Context;
                 return macro
                 {
                   $varSelectorExpr;
-                  selector.evaluate($left, haxe.Int64.ofInt($right));
+                  var __right:Null<Int> = $right;
+                  selector.evaluate($left, __right == null ? null : haxe.Int64.ofInt(__right));
                 }
               }
             }
@@ -725,7 +727,28 @@ import haxe.macro.Context;
     left:Int64,
     right:Int64):Bool
   {
-    return left.compare(right) == 0;
+    if (left == null)
+    {
+      if (right == null)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      if (right == null)
+      {
+        return false;
+      }
+      else
+      {
+        return left.compare(right) == 0;
+      }
+    }
   }
 }
 
@@ -736,7 +759,7 @@ import haxe.macro.Context;
     left:Int64,
     right:Int64):Bool
   {
-    return left.compare(right) != 0;
+    return !Int64EqInt64Evaluator.evaluate(null, left, right);
   }
 }
 

@@ -29,7 +29,7 @@
 
 package tests;
 
-#if haxe_211
+#if (haxe_211 || haxe3)
 using com.dongxiguo.hoo.NativeEvaluators;
 using com.dongxiguo.hoo.Int64Evaluators;
 #else
@@ -51,6 +51,8 @@ import com.dongxiguo.hoo.Int64Helper;
   
   @hoo public static function foo():Int
   {
+    var i:Null<Int> = null;
+    trace(i == null);
     return 1;
   }
   
