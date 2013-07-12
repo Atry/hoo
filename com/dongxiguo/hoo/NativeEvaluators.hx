@@ -62,9 +62,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class AssignEvaluator
+@:final class AssignEvaluator
 {
-  public static function evaluate<Operand>(
+  @:macro public static function evaluate<Operand>(
     selector:ExprOf<BinaryOperatorSelector<AssignTag, Operand, Operand>>,
     left:ExprOf<Operand>, right:ExprOf<Operand>):ExprOf<Operand>
   {
@@ -72,9 +72,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class AddStringEvaluator
+@:final class AddStringEvaluator
 {
-  public static function evaluate<Left>(
+  @:macro public static function evaluate<Left>(
     selector:ExprOf<BinaryOperatorSelector<AddTag, Left, String>>,
     left:ExprOf<Left>, right:ExprOf<String>):ExprOf<String>
   {
@@ -82,9 +82,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class StringAddEvaluator
+@:final class StringAddEvaluator
 {
-  public static function evaluate<Right>(
+  @:macro public static function evaluate<Right>(
     selector:ExprOf<BinaryOperatorSelector<AddTag, String, Right>>,
     left:ExprOf<String>, right:ExprOf<Right>):ExprOf<String>
   {
@@ -92,9 +92,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class StringAddAssignEvaluator
+@:final class StringAddAssignEvaluator
 {
-  public static function evaluate<Operand>(
+  @:macro public static function evaluate<Operand>(
     selector:ExprOf<BinaryOperatorSelector<AssignOpTag<AddTag>, String, Operand>>,
     left:ExprOf<String>, right:ExprOf<Operand>):ExprOf<String>
   {
@@ -295,9 +295,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
 }
 #end
 
-@:final @:macro class FloatBinaryEvaluator
+@:final class FloatBinaryEvaluator
 {
-  public static function evaluate<OperatorTag>(
+  @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Float, Float>>,
     left:ExprOf<Float>, right:ExprOf<Float>):Expr
   {
@@ -305,9 +305,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class FloatPrefixEvaluator
+@:final class FloatPrefixEvaluator
 {
-  public static function evaluate<OperatorTag>(
+  @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<PrefixOperatorSelector<OperatorTag, Float>>,
     operant:ExprOf<Float>):Expr
   {
@@ -315,8 +315,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class FloatPostfixEvaluator
+@:final class FloatPostfixEvaluator
 {
+  @:macro
   public static function evaluate<OperatorTag>(
     selector:ExprOf<PostfixOperatorSelector<OperatorTag, Float>>,
     operant:ExprOf<Float>):Expr
@@ -325,8 +326,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class BoolBinaryEvaluator
+@:final class BoolBinaryEvaluator
 {
+  @:macro
   public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Bool, Bool>>,
     left:ExprOf<Bool>, right:ExprOf<Bool>):Expr
@@ -335,8 +337,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class BoolPrefixEvaluator
+@:final class BoolPrefixEvaluator
 {
+  @:macro
   public static function evaluate<OperatorTag>(
     selector:ExprOf<PrefixOperatorSelector<OperatorTag, Bool>>,
     operant:ExprOf<Bool>):Expr
@@ -345,8 +348,9 @@ import com.dongxiguo.hoo.selector.binopTag.EqTag;
   }
 }
 
-@:final @:macro class BoolPostfixEvaluator
+@:final class BoolPostfixEvaluator
 {
+  @:macro
   public static function evaluate<OperatorTag>(
     selector:ExprOf<PostfixOperatorSelector<OperatorTag, Bool>>,
     operant:ExprOf<Bool>):Expr

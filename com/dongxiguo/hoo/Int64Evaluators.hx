@@ -654,9 +654,9 @@ import haxe.macro.Context;
 
 #if haxe_211
 
-@:final @:macro class FloatInt64Evalutor
+@:final class FloatInt64Evalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Float, Int64>>,
     left:ExprOf<Float>,
     right:ExprOf<Int64>):Expr
@@ -665,9 +665,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64FloatEvalutor
+@:final class Int64FloatEvalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Float>>,
     left:ExprOf<Int64>,
     right:ExprOf<Float>):Expr
@@ -676,9 +676,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64IntEvalutor
+@:final class Int64IntEvalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Int>>,
     left:ExprOf<Int64>,
     right:ExprOf<Int>):Expr
@@ -687,9 +687,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class IntInt64Evalutor
+@:final class IntInt64Evalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int, Int64>>,
     left:ExprOf<Int>,
     right:ExprOf<Int64>):Expr
@@ -720,9 +720,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final extern class Int64EqInt64Evaluator
+@:final class Int64EqInt64Evaluator
 {  
-  @:extern public static inline function evaluate(
+  public static function evaluate(
     selector:BinaryOperatorSelector<EqTag, Int64, Int64>,
     left:Int64,
     right:Int64):Bool
@@ -939,9 +939,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64IncrementEvaluator
+@:final class Int64IncrementEvaluator
 {  
-  public static function evaluate(
+   @:macro public static function evaluate(
     selector:ExprOf<PostfixOperatorSelector<IncrementTag, Int64>>,
     operand:ExprOf<Int64>):ExprOf<Int64>
   {
@@ -954,9 +954,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64DecrementEvaluator
+@:final class Int64DecrementEvaluator
 {
-  public static function evaluate(
+   @:macro public static function evaluate(
     selector:ExprOf<PostfixOperatorSelector<DecrementTag, Int64>>,
     operand:ExprOf<Int64>):ExprOf<Int64>
   {
@@ -969,9 +969,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class IncrementInt64Evaluator
+@:final class IncrementInt64Evaluator
 {
-  public static function evaluate(
+   @:macro public static function evaluate(
     selector:ExprOf<PrefixOperatorSelector<IncrementTag, Int64>>,
     operand:ExprOf<Int64>):ExprOf<Int64>
   {
@@ -983,9 +983,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class DecrementInt64Evaluator
+@:final class DecrementInt64Evaluator
 {
-  public static function evaluate(
+   @:macro public static function evaluate(
     selector:ExprOf<PrefixOperatorSelector<DecrementTag, Int64>>,
     operand:ExprOf<Int64>):ExprOf<Int64>
   {
@@ -997,9 +997,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64AssignOpIntEvalutor
+@:final class Int64AssignOpIntEvalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<AssignOpTag<OperatorTag>, Int64, Int>>,
     left:ExprOf<Int64>,
     right:ExprOf<Int>):ExprOf<Int64>
@@ -1008,8 +1008,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64AssignOpInt64Evalutor
+@:final class Int64AssignOpInt64Evalutor
 {
+  @:macro 
   public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<AssignOpTag<OperatorTag>, Int64, Int64>>,
     left:ExprOf<Int64>,
@@ -1021,9 +1022,9 @@ import haxe.macro.Context;
 
 #if !haxe_211
 
-@:final @:macro class Int64IntEvalutor
+@:final class Int64IntEvalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Int>>,
     left:ExprOf<Int64>,
     right:ExprOf<Int>):Expr
@@ -1032,9 +1033,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class IntInt64Evalutor
+@:final class IntInt64Evalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int, Int64>>,
     left:ExprOf<Int>,
     right:ExprOf<Int64>):Expr
@@ -1043,9 +1044,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class FloatInt64Evalutor
+@:final class FloatInt64Evalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Float, Int64>>,
     left:ExprOf<Float>,
     right:ExprOf<Int64>):Expr
@@ -1054,9 +1055,9 @@ import haxe.macro.Context;
   }
 }
 
-@:final @:macro class Int64FloatEvalutor
+@:final class Int64FloatEvalutor
 {
-  public static function evaluate<OperatorTag>(
+   @:macro public static function evaluate<OperatorTag>(
     selector:ExprOf<BinaryOperatorSelector<OperatorTag, Int64, Float>>,
     left:ExprOf<Int64>,
     right:ExprOf<Float>):Expr
