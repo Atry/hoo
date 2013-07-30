@@ -1,11 +1,11 @@
 // Copyright (c) 2012, 杨博 (Yang Bo)
 // All rights reserved.
-// 
+//
 // Author: 杨博 (Yang Bo) <pop.atry@gmail.com>
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
-// 
+//
 // * Redistributions of source code must retain the above copyright notice,
 //   this list of conditions and the following disclaimer.
 // * Redistributions in binary form must reproduce the above copyright notice,
@@ -14,7 +14,7 @@
 // * Neither the name of the <ORGANIZATION> nor the names of its contributors
 //   may be used to endorse or promote products derived from this software
 //   without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,24 +44,24 @@ import com.dongxiguo.hoo.Int64Helper;
 /**
  * @author 杨博
  */
-@:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta("hoo"))
-@:final class HooTest 
+@:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta(":hoo"))
+@:final class HooTest
 {
   private static var setter(never, null):Int = 0;
-  
-  @hoo public static function foo():Int
+
+  @:hoo public static function foo():Int
   {
     var i:Null<Int> = null;
     trace(i == null);
     return 1;
   }
-  
-  @hoo(true) public static function main():Void
+
+  @:hoo(true) public static function main():Void
   {
     var float = -4294967296.0;
     trace(Int64Helper.floatToInt64(float));
     trace(Int64Helper.int64ToFloat(Int64Helper.floatToInt64(float)));
-    
+
     trace(Int64.toStr(Int64.ofInt(123456789) * 100000000 + 321));
     foo();
     var stringArray = ["H", "el", "lo, "] + [ "Wo", "rld!" ];
@@ -82,8 +82,8 @@ import com.dongxiguo.hoo.Int64Helper;
 
     1 / 1 * 1 - 3;
     1 % 1.01;
-    
-    
+
+
     var i64 = Int64.ofInt(3);
     var f3 = 1 - 5 * i64 / 5 + 3 - 4 * 5.0;
     trace(f3);

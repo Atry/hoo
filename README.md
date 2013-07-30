@@ -7,13 +7,13 @@ for [Haxe](http://www.haxe.org/).
 Hoo has built-in overloaded operators for `haxe.Int64`. Here's an example:
 
     var i64 = Int64.ofInt(123456789);
-    
+
     // Output: 12345678900000123
     trace(i64 * 100000000 + 123);
 
 ## Installation
 
-I have uploaded Hoo to [haxelib](http://lib.haxe.org/p/hoo). To install it, run 
+I have uploaded Hoo to [haxelib](http://lib.haxe.org/p/hoo). To install it, run
 this in the shell:
 
     haxelib install hoo
@@ -40,18 +40,18 @@ In the following example, we'll overload the concatenation operator for Arrays.
 
 Create `Sample.hx` with the following content:
 
-    @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta("hoo"))
+    @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta(":hoo"))
     class Sample
     {
-      @hoo public static function main() 
+      @:hoo public static function main()
       {
         var stringArray = ["H", "el", "lo, "] + [ "Wo", "rld!" ];
         trace(stringArray.join(""));
       }
     }
 
-To enable operator overloading, you must add `@:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta("hoo"))`
-for classes that use overloaded operators, and add `@hoo` for methods that use overloaded operators.
+To enable operator overloading, you must add `@:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta(":hoo"))`
+for classes that use overloaded operators, and add `@:hoo` for methods that use overloaded operators.
 
 The operator `+` will be replaced to a function call to `evaluate`.
 If you compile `Sample.hx`, Haxe will complain that it cannot find the field `evaluate`.
@@ -77,10 +77,10 @@ Create `ArrayConcatenationEvaluator.hx` with the following content:
 Add `using ArrayConcatenationEvaluator;` to your `Sample.hx`:
 
     using ArrayConcatenationEvaluator;
-    @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta("hoo"))
+    @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta(":hoo"))
     class Sample
     {
-      @hoo public static function main() 
+      @:hoo public static function main()
       {
         // stringArray is ["H", "el", "lo, ", "wo", "rld!" ];
         var stringArray = ["H", "el", "lo, "] + ["wo", "rld!"];
@@ -107,13 +107,13 @@ To enable them, type `using com.dongxiguo.hoo.Int64Evaluators;` and/or
     using com.dongxiguo.hoo.Int64Evaluators;
     using com.dongxiguo.hoo.NativeEvaluators;
     #end
-    @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta("hoo"))
+    @:build(com.dongxiguo.hoo.OperatorOverloading.enableByMeta(":hoo"))
     class Sample
     {
-      @hoo public static function main() 
+      @:hoo public static function main()
       {
         var i64 = Int64.ofInt(123456789);
-        
+
         // Output: 12345678900000123
         trace(i64 * 100000000 + 123);
       }
