@@ -94,7 +94,7 @@ Add `using ArrayConcatenationEvaluator;` to your `Sample.hx`:
 
 Now you will see it outputs `Hello, world!`.
 
-## Build-in overloads
+## Built-in overloads
 
 There are built-in overloaded operators for `haxe.Int64` and native types.
 To enable them, type `using com.dongxiguo.hoo.Int64Evaluators;` and/or
